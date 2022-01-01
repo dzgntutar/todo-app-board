@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ReadTodoWorkerService.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +21,13 @@ namespace ReadTodoWorkerService
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    IConfiguration Configuration = hostContext.Configuration;
+
+                    services.AddDbContext<AppDbContext>(options =>
+                    {
+                        options.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
+                    });
+
                     services.AddHostedService<Worker>();
                 });
     }
