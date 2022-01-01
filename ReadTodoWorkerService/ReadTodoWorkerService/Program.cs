@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReadTodoWorkerService.Data;
+using ReadTodoWorkerService.Manager;
+using ReadTodoWorkerService.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,10 @@ namespace ReadTodoWorkerService
                     {
                         options.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
                     });
+
+                    services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+
+                    services.AddSingleton<IBoardTaskManager, BoardTaskManager>();
 
                     services.AddHostedService<Worker>();
                 });
