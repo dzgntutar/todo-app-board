@@ -1,38 +1,34 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ReadTodoWorkerService.Data;
+using ReadTodoWorkerService.FetchData;
 using ReadTodoWorkerService.Manager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ReadTodoWorkerService.Entities;
 
 namespace ReadTodoWorkerService
 {
     public class Worker : BackgroundService
     {
         IBoardTaskManager _boardTaskManager;
+        private readonly ILogger<Worker> _logger;
 
-        public Worker(IBoardTaskManager boardTaskManager)
+        public Worker(IBoardTaskManager boardTaskManager, ILogger<Worker> logger)
         {
+            _logger = logger;
             _boardTaskManager = boardTaskManager;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var task = new BoardTask();
-            task.Name = "Task 1";
-            task.Level = 1;
-            task.EstimatedDuration = 5;
+            IFetchData api1 = new Api1(_boardTaskManager);
 
-            _boardTaskManager.Add(task);
+            api1.BaseAddress = "http://www.mocky.io/";
+            api1.RequestUri = "v2/5d47f24c330000623fa3ebfa";
 
-            var products = _boardTaskManager.GetList();
+            StartFetching startFeching = new StartFetching();
+            startFeching.AddApi(api1);
 
-            Console.WriteLine(products.Count);
+            startFeching.Run();
 
             return Task.CompletedTask;
         }
