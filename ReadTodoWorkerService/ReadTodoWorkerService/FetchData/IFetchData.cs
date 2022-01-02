@@ -11,6 +11,6 @@ namespace ReadTodoWorkerService.FetchData
         string BaseAddress { get; set; }
         string RequestUri { get; set; }
 
-        public void GetchDataFromApi();
+        public void Fetch();
     }
 }

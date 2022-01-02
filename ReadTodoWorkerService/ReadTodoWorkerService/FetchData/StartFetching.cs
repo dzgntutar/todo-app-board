@@ -19,7 +19,7 @@ namespace ReadTodoWorkerService.FetchData
         {
             foreach (var api in Apis)
             {
-                api.GetchDataFromApi();
+                api.Fetch();
             }
         }
     }

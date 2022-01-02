@@ -20,13 +20,21 @@ namespace ReadTodoWorkerService
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            IFetchData api1 = new Api1(_boardTaskManager);
+            IFetchData api1 = new Api1(_boardTaskManager)
+            {
+                BaseAddress = "http://www.mocky.io/",
+                RequestUri = "v2/5d47f24c330000623fa3ebfa"
+            };
 
-            api1.BaseAddress = "http://www.mocky.io/";
-            api1.RequestUri = "v2/5d47f24c330000623fa3ebfa";
+            IFetchData api2 = new Api2(_boardTaskManager)
+            {
+                BaseAddress = "http://www.mocky.io/",
+                RequestUri = "v2/5d47f235330000623fa3ebf7"
+            };
 
             StartFetching startFeching = new StartFetching();
             startFeching.AddApi(api1);
+            startFeching.AddApi(api2);
 
             startFeching.Run();
 

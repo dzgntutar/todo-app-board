@@ -1,5 +1,0 @@
-dotnet tool update --global dotnet-ef
-
-add-migration initial -verbose
-go to project folder in terminal
-dotnet ef database update

@@ -22,23 +22,30 @@ namespace ReadTodoWorkerService.FetchData
             _boardTaskManager = boardTaskManager;
         }
 
-        public void GetchDataFromApi()
+        public void Fetch()
         {
             using (var httpClient = new HttpClient())
             {
                 HttpClient client = new HttpClient();
                 client.BaseAddress = new Uri(BaseAddress);
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
                 HttpResponseMessage response = client.GetAsync(RequestUri).Result;
+
                 if (response.IsSuccessStatusCode)
                 {
                     var data = response.Content.ReadAsStringAsync().Result;
-                    var data2 = JsonConvert.DeserializeObject<List<Api1Model>>(data);
-
-                    foreach (var item in data2)
+                    if (!string.IsNullOrEmpty(data))
                     {
-                        var boardTask = new BoardTask() { Name = item.id, Level = (short)item.zorluk, EstimatedDuration = (short)item.zorluk };
-                        _boardTaskManager.Add(boardTask);
+                        var data2 = JsonConvert.DeserializeObject<List<Api1Model>>(data);
+                        if(data2 != null)
+                        {
+                            foreach (var item in data2)
+                            {
+                                var boardTask = new BoardTask() { Name = item.id, Level = (short)item.zorluk, EstimatedDuration = (short)item.zorluk };
+                                _boardTaskManager.Add(boardTask);
+                            }
+                        }
                     }
                 }
             }
